@@ -43,9 +43,7 @@ export default function BookScreen() {
 
   const onContinue = () => {
     if (!hasRange) return;
-    // The Review route lands on Day 7 — for now Continue dismisses the sheet
-    // so the existing flow stays runnable.
-    router.back();
+    router.push('/checkout/review');
   };
 
   return (
