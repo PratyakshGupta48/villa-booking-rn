@@ -79,6 +79,14 @@ export default function RootLayout() {
               }}
             >
               <Stack.Screen name="(tabs)" />
+              <Stack.Screen
+                name="villa/[id]/book"
+                options={{
+                  presentation: 'transparentModal',
+                  animation: 'slide_from_bottom',
+                  contentStyle: { backgroundColor: 'transparent' },
+                }}
+              />
             </Stack>
           </QueryClientProvider>
         </StripeProvider>

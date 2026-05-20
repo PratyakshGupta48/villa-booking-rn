@@ -279,7 +279,7 @@ const calStyles = StyleSheet.create({
   },
 });
 
-function StickyBookBar({ price }: { price: number }) {
+function StickyBookBar({ price, villaId }: { price: number; villaId: string }) {
   return (
     <View style={bookBarStyles.outer} pointerEvents="box-none">
       <LinearGradient
@@ -303,7 +303,9 @@ function StickyBookBar({ price }: { price: number }) {
             </Body>
           </View>
         </View>
-        <GoldButton style={{ height: 44 }}>Check availability</GoldButton>
+        <GoldButton style={{ height: 44 }} onPress={() => router.push(`/villa/${villaId}/book`)}>
+          Check availability
+        </GoldButton>
       </View>
     </View>
   );
@@ -477,7 +479,7 @@ export default function VillaDetailScreen() {
       </ScrollView>
 
       <FloatingTopBar />
-      <StickyBookBar price={villa.price} />
+      <StickyBookBar price={villa.price} villaId={villa.id} />
     </View>
   );
 }
