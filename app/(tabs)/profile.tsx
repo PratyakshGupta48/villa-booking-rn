@@ -5,6 +5,7 @@
 // VerifiedBadge, then the settings list (Payment methods, Notifications,
 // Privacy, Sign out), then the FlyMeOut · v2.4.0 footer.
 
+import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,6 +15,15 @@ import { Hairline } from '../../src/components/hairlines';
 import { Chevron } from '../../src/components/icons';
 import { Body, Caps, Serif } from '../../src/components/typography';
 import { colors, fonts, letterSpacing, radii } from '../../src/lib/theme';
+
+const STATE_PREVIEWS: readonly { label: string; path: string }[] = [
+  { label: 'Discover · loading skeleton', path: '/states/loading-discover' },
+  { label: 'Villa Detail · loading skeleton', path: '/states/loading-detail' },
+  { label: 'Discover · empty filters', path: '/states/empty-discover' },
+  { label: 'Error · card declined', path: '/states/error-card' },
+  { label: 'Error · network issue', path: '/states/error-network' },
+  { label: 'Error · dates just booked', path: '/states/error-dates' },
+];
 
 const PROFILE = {
   initialKey: 'A',
@@ -81,6 +91,29 @@ export default function ProfileScreen() {
             </View>
           ))}
         </View>
+
+        {__DEV__ ? (
+          <View style={styles.devBlock}>
+            <Caps style={styles.settingsLabel}>Design states (dev only)</Caps>
+            <View style={styles.settingsCard}>
+              {STATE_PREVIEWS.map((p, i) => (
+                <View key={p.path}>
+                  {i > 0 && <Hairline />}
+                  <Pressable
+                    onPress={() => router.push(p.path as never)}
+                    style={rowStyles.row}
+                    accessibilityRole="button"
+                  >
+                    <Body size={15.5} color={colors.text}>
+                      {p.label}
+                    </Body>
+                    <Chevron size={14} color={colors.text3} />
+                  </Pressable>
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
 
         <View style={styles.versionRow}>
           <Serif size={13} italic color={colors.text3} style={styles.versionText}>
@@ -174,6 +207,9 @@ const styles = StyleSheet.create({
     borderColor: colors.hairline,
     borderRadius: radii.cardLg,
     overflow: 'hidden',
+  },
+  devBlock: {
+    marginTop: 28,
   },
   versionRow: {
     marginTop: 28,
