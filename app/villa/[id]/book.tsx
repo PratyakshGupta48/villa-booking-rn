@@ -21,7 +21,7 @@ import { calcTotal } from '../../../src/lib/pricing';
 import { colors, radii } from '../../../src/lib/theme';
 import { useDraftBooking } from '../../../src/store/draftBooking';
 
-// Booked dates for the demo — Day 10 will wire these to a Firestore feed.
+// Booked dates for the demo — hard-coded against the mocked data layer.
 const SEP_BOOKED = [3, 4, 15, 16, 17, 28] as const;
 const OCT_BOOKED = [10, 11, 22, 23, 24] as const;
 

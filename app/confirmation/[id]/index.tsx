@@ -26,8 +26,8 @@ const HERO_HEIGHT = 360;
 export default function ConfirmationScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
-  // The booking is fixed (sample) for now — Day 10 will pull it from
-  // Firestore by booking ref. The {id} param drives the hero photo only.
+  // The booking is fixed sample data against the mocked data layer; the
+  // {id} param drives the hero photo only.
   const villa = requireVilla(id || 'aroma');
   const b = BOOKING;
 

@@ -3,8 +3,8 @@
 // Translated from /Users/pratyakshgupta/Downloads/flymeout/project/villas/
 // screens/trips.jsx. The design splits this into three separate variants
 // (Upcoming, Past, Empty); in the real app they're one screen driven by a
-// local segment state. For now Past holds hand-crafted historical trips so
-// the screen has texture; Day 10 wires Firestore.
+// local segment state. Past holds hand-crafted historical trips so the
+// screen has texture against the mocked data layer.
 
 import { BlurView } from 'expo-blur';
 import { Link } from 'expo-router';

@@ -2,8 +2,8 @@
 // cancellation line, sticky CTA.
 //
 // Translated from /Users/pratyakshgupta/Downloads/flymeout/project/villas/
-// screens/review.jsx. Reads the active sample BOOKING for now; Day 10 will
-// swap in the live draft-booking state.
+// screens/review.jsx. Renders the active sample BOOKING against the mocked
+// data layer (see README "Data layer" for the production-wiring shape).
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';

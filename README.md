@@ -59,9 +59,9 @@ error, and loading variant.
 | Language      | TypeScript strict                                            |
 | Routing       | Expo Router (file-based)                                     |
 | Client state  | Zustand (draft booking, calendar range, guest count)         |
-| Server state  | TanStack Query (installed, scoped for the Firebase wire-up)  |
-| Backend       | Firebase Firestore + Anonymous Auth (scoped for the wire-up) |
-| Payments      | `@stripe/stripe-react-native` + Apple Pay via `PlatformPay`  |
+| Server state  | TanStack Query (installed; data layer mocked — see below)    |
+| Backend       | Firebase Firestore + Anonymous Auth (architecture only)      |
+| Payments      | `@stripe/stripe-react-native` + Apple Pay (visual stub only) |
 | Fonts         | `expo-font` — Fraunces, Inter, JetBrains Mono                |
 | SVG           | `react-native-svg` (all 32 icons + grain noise filter)       |
 | Blur          | `expo-blur` (glass top bar, tab bar, dimmed backdrop)        |
@@ -117,22 +117,32 @@ npm run lint                # eslint
 npm run format              # prettier --write .
 ```
 
-## Roadmap
+## Data layer
 
-The next commit wires the real backend and payment sheet against the same
-screens — no UI changes:
+A public hiring artifact shouldn't process real cards or hold live PII, so
+the data layer is deliberately mocked: the 12 villas are a typed constant in
+`src/lib/data.ts`, the in-flight booking lives in a Zustand store, and the
+Apple Pay pill in Review is a faithful visual stub rather than a real
+PaymentSheet trigger. The integration the screens are _shaped for_ is
+documented below so a reviewer can read the architecture without unwrapping
+a half-wired backend.
+
+### How it would be wired in production
 
 - `src/lib/firebase.ts` — anonymous-auth init on first mount.
-- `src/features/bookings/createBooking.ts` — atomic Firestore transaction that
-  reads availability, throws `BookingConflictError` on overlap, and writes the
-  booking + the updated availability range in a single `runTransaction`.
-- `src/features/bookings/useUpcomingBookings.ts` — real-time Firestore listener
-  feeding the Trips Upcoming list.
-- `src/features/villas/queries.ts` — TanStack Query hooks behind Discover and
-  Detail, with the existing skeleton screens as suspense fallbacks.
-- The Reserve CTA in `app/checkout/review.tsx` triggers the real Stripe Payment
-  Sheet (sandbox); on success the atomic transaction creates the booking before
-  navigating to Confirmation.
+- `src/features/bookings/createBooking.ts` — atomic Firestore transaction
+  that reads availability, throws `BookingConflictError` on overlap, and
+  writes the booking + the updated availability range in a single
+  `runTransaction`. This is the keystone — it's what prevents two phones
+  from double-booking the same villa across the same range.
+- `src/features/bookings/useUpcomingBookings.ts` — real-time Firestore
+  listener feeding the Trips Upcoming list (so a new booking appears within
+  seconds on a second device).
+- `src/features/villas/queries.ts` — TanStack Query hooks behind Discover
+  and Detail, with the existing skeleton screens as suspense fallbacks.
+- The Reserve CTA in `app/checkout/review.tsx` triggers the real Stripe
+  Payment Sheet (sandbox keys); on success the atomic transaction creates
+  the booking before navigating to Confirmation.
 
 ## License
 
