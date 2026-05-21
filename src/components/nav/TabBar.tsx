@@ -24,13 +24,29 @@ const TABS: Readonly<Record<string, TabConfig>> = {
   profile: { name: 'profile', label: 'Profile', Icon: Person },
 };
 
+// Height of the soft fade region above the tabs — long enough that the
+// gradient has room to dissolve content into the dark backdrop without a
+// visible edge. The BlurView only covers the tabs area below this region,
+// hidden by the gradient at its top.
+const FADE_HEIGHT = 64;
+
 export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   return (
     <View style={styles.container} pointerEvents="box-none">
-      <BlurView intensity={20} tint="dark" style={StyleSheet.absoluteFillObject} />
+      {/* Subtle blur — only over the tab area, masked by the gradient above. */}
+      <BlurView intensity={14} tint="dark" style={styles.blur} />
+      {/* Long soft gradient — fades from fully transparent at the top through
+          to solid dark over the tabs, killing the hard edge the BlurView
+          alone would draw. Five stops keep the curve smooth. */}
       <LinearGradient
-        colors={['rgba(10,10,10,0)', 'rgba(10,10,10,0.92)', '#0A0A0A']}
-        locations={[0, 0.38, 1]}
+        colors={[
+          'rgba(10,10,10,0)',
+          'rgba(10,10,10,0.28)',
+          'rgba(10,10,10,0.65)',
+          'rgba(10,10,10,0.92)',
+          '#0A0A0A',
+        ]}
+        locations={[0, 0.32, 0.58, 0.82, 1]}
         style={StyleSheet.absoluteFillObject}
         pointerEvents="none"
       />
@@ -77,8 +93,17 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    paddingTop: FADE_HEIGHT,
     paddingBottom: padding.tabBarBottom,
-    paddingTop: 10,
+  },
+  blur: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    // Start the blur a few pixels inside the gradient's mid-dark zone so its
+    // top edge sits behind ~60% gradient cover — no visible boundary.
+    top: FADE_HEIGHT - 8,
+    bottom: 0,
   },
   tabs: {
     flexDirection: 'row',

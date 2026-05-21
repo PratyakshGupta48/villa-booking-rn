@@ -9,7 +9,8 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Fragment } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GhostButton, GoldButton } from '../../../src/components/buttons';
 import { Hairline } from '../../../src/components/hairlines';
@@ -24,6 +25,7 @@ const HERO_HEIGHT = 360;
 
 export default function ConfirmationScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const insets = useSafeAreaInsets();
   // The booking is fixed (sample) for now — Day 10 will pull it from
   // Firestore by booking ref. The {id} param drives the hero photo only.
   const villa = requireVilla(id || 'aroma');
@@ -38,7 +40,11 @@ export default function ConfirmationScreen() {
   ];
 
   return (
-    <View style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Hero band */}
       <View style={styles.hero}>
         <Photo
@@ -108,10 +114,8 @@ export default function ConfirmationScreen() {
             Back to Discover
           </GhostButton>
         </View>
-
-        <View style={{ height: 60 }} />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

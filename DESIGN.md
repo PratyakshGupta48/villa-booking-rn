@@ -60,10 +60,14 @@ saturation through a higher-quality source asset and applies a flat
 ### Glass blur (FloatingTopBar, TabBar, sheet handles)
 
 The web design uses `backdrop-filter: blur(20px) saturate(140%)`. RN's
-`expo-blur` `BlurView` reproduces the blur with `intensity={40}` and
-`tint="dark"`, but does not expose a saturate multiplier. The acceptable read
-is achieved by elevating the underlying background-color alpha from `0.45` to
-`0.55`.
+`expo-blur` `BlurView` reproduces the blur with low-to-mid intensity
+(`14`–`24`) and `tint="dark"`, but does not expose a saturate multiplier.
+The acceptable read is achieved by elevating the underlying
+background-color alpha from `0.45` to `0.55`. On the TabBar specifically,
+the BlurView is positioned to start a few pixels inside the gradient's
+mid-dark zone (`top: FADE_HEIGHT - 8`) so its top edge sits behind ~60%
+gradient cover — this hides the otherwise-visible boundary at the blur's
+top.
 
 ### Avatar edge shadow
 
@@ -112,10 +116,16 @@ Booked dates are rendered with a muted text color and a thin strike line.
 
 The source uses a `-webkit-mask-image: linear-gradient(to top, black 60%,
 transparent)` on the tab bar's top edge. RN's masking APIs (`MaskedView`)
-work but add a frame of jank on tab transitions. The RN substitution stacks
-an `expo-linear-gradient` `LinearGradient` directly above the tab bar with
-colors `['rgba(11,11,11,0)', 'rgba(11,11,11,0.85)']`, `pointerEvents="none"`,
-which produces the same fade without the masking cost.
+work but add a frame of jank on tab transitions, and RN's `expo-blur`
+`BlurView` draws a hard edge at its top boundary that a single short
+gradient can't soften. The RN substitution gives the tab bar container a
+tall (`64px`) `paddingTop` fade region, and renders inside it a 5-stop
+`expo-linear-gradient` running from fully transparent through 28% / 65% /
+92% darkness to solid `#0A0A0A` at the bottom. The BlurView is stacked
+behind the gradient and positioned to start `top: FADE_HEIGHT - 8` so its
+own top edge sits behind the gradient's mid-dark zone — the boundary the
+blur would otherwise draw is invisible. Content scrolling underneath
+dissolves gradually into the tab area instead of meeting it at a line.
 
 ## Components — what maps to what
 
