@@ -17,11 +17,9 @@ import { Close } from '../../../src/components/icons';
 import { NumberStepper } from '../../../src/components/stepper';
 import { Body, Caps, Serif, Tnum } from '../../../src/components/typography';
 import { requireVilla } from '../../../src/lib/data';
+import { calcTotal } from '../../../src/lib/pricing';
 import { colors, radii } from '../../../src/lib/theme';
 import { useDraftBooking } from '../../../src/store/draftBooking';
-
-const CLEANING_FEE = 250;
-const SERVICE_FEE = 360;
 
 // Booked dates for the demo — Day 10 will wire these to a Firestore feed.
 const SEP_BOOKED = [3, 4, 15, 16, 17, 28] as const;
@@ -38,8 +36,7 @@ export default function BookScreen() {
 
   const hasRange = range.start !== null && range.end !== null;
   const nights = hasRange ? (range.end as number) - (range.start as number) : 0;
-  const subtotal = nights * villa.price;
-  const total = hasRange ? subtotal + CLEANING_FEE + SERVICE_FEE : 0;
+  const total = calcTotal(villa.price, nights);
 
   const onContinue = () => {
     if (!hasRange) return;
