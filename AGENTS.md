@@ -15,7 +15,7 @@ Expo SDK 54 · TypeScript strict · Expo Router (file-based) · Zustand · TanSt
 Query · Firebase (Firestore + Anonymous Auth) · `@stripe/stripe-react-native` +
 Apple Pay · `expo-font` (Fraunces · Inter · JetBrains Mono) · `react-native-svg`
 · `expo-blur` · `expo-linear-gradient` · `@gorhom/bottom-sheet` ·
-`react-native-reanimated` v3.
+`react-native-reanimated` v4 (with the `react-native-worklets` peer engine).
 
 ## Pixel-fidelity workflow (per screen)
 
